@@ -10,11 +10,11 @@ ipsec start --nofork &
 # 等待 5 秒，等 ipsec 启动成功
 sleep 5
 
+echo "IPsec 开始连接（超时时间 $TIMEOUT 秒）"
+
 # 连接 vpn
 ipsec up vpn &
 
-# 超时 30 秒
-TIMEOUT=30
 # 计时器
 TIMER=0
 # 检测 IPsec 连接状态
@@ -24,6 +24,7 @@ while true; do
         echo "IPsec 连接成功！"
         break
     fi
+    echo "IPsec 连接中，$TIMER 秒"
     # 如果超时，则退出循环
     if [ $TIMER -ge $TIMEOUT ]; then
         echo "IPsec 连接超时！"
