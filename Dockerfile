@@ -15,7 +15,7 @@ RUN pacman -Scc --noconfirm
 ADD entrypoint.sh /entrypoint.sh
 
 # IPsec 超时时长
-ENV TIMEOUT=120
+ENV TIMEOUT=60
 
 EXPOSE 1080
 ENTRYPOINT ["/entrypoint.sh"]

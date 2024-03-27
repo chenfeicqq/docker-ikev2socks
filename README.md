@@ -9,6 +9,7 @@
 ``` shell
 docker run -d \
 --cap-add=NET_ADMIN \
+-e TIMEOUT=120 \
 -p 1080:1080 \
 -v <your ipsec.conf>:/etc/ipsec.conf \
 -v <your ipsec.secrets>:/etc/ipsec.secrets \
@@ -16,34 +17,37 @@ docker run -d \
 chenfeicqq/ikev2socks:latest
 ```
 
++ TIMEOUT conn 的超时时间，多个 conn 时，为每一个 conn 的超时时间
+
 ## 配置文件
 
 + ipsec.conf
 
-``` yaml
-config setup
-    charondebug="ike 2, knl 2, cfg 2, net 2, esp 2, dmn 2,  mgr 2"
+    ``` yaml
+    config setup
+        charondebug="ike 2, knl 2, cfg 2, net 2, esp 2, dmn 2,  mgr 2"
+    
+    conn vpn
+        left=%config
+        leftsourceip=%config
+        leftauth=eap-gtc
+        right=<remote server>
+        rightsubnet=0.0.0.0/0
+        rightid=<remote id>
+        rightauth=pubkey
+        eap_identity=<username>
+        auto=add
+    ```
 
-conn vpn
-    left=%config
-    leftsourceip=%config
-    leftauth=eap-gtc
-    right=<remote server>
-    rightsubnet=0.0.0.0/0
-    rightid=<remote id>
-    rightauth=pubkey
-    eap_identity=<username>
-    auto=add
-```
+    + `conn` 可以声明多个
+    + `<remote server>` 服务器地址
+    + `<remote id>` 远程ID
 
 + ipsec.secrets
 
-``` yaml
-<username> : EAP <password>
-```
+    ``` yaml
+    <username> : EAP <password>
+    ```
 
-配置项：
-+ `<remote server>` 服务器地址
-+ `<remote id>` 远程ID
-+ `<username>` 用户名
-+ `<password>` 密码
+    + `<username>` 用户名
+    + `<password>` 密码
