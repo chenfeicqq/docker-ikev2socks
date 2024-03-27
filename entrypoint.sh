@@ -50,8 +50,9 @@ function health_check() {
     # 循环检查状态
     while true; do
         if ipsec status | grep -q "ESTABLISHED"; then
-            # 存在连接，等待一秒钟再进行下一次检测
-            sleep 1
+            echo "IPSec 连接正常！"
+            # 存在连接，等待10秒钟再进行下一次检测
+            sleep 10
         else
             echo "IPSec 连接丢失！"
             # 重新连接
@@ -75,13 +76,13 @@ up_ip_sec
 # 成功标识
 success=$?
 
-if [ $success -eq 1 ]; then
-    # 连接成功，启动监控检查
-    health_check
-else
+if [ $success -eq 0 ]; then
     # 连接失败
     exit 1
 fi
+
+# 连接成功，启动健康检查
+health_check &
 
 echo "启动 Gost socks5"
 # 启动 gost socks5
