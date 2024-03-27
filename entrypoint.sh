@@ -53,7 +53,7 @@ while IFS= read -r line; do
 done < <(grep '^conn' "/etc/ipsec.conf")
 
 # 连接失败
-if [ "$success" -eq 0]; then
+if [ $success -eq 0 ]; then
     exit 1
 fi
 
